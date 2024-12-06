@@ -16,3 +16,8 @@
       (if (pred (first c))
         (recur (rest c) [(first c)] (conj res curr-c))
         (recur (rest c) (conj curr-c (first c)) res)))))
+
+(defn insert-at-pos [coll k v]
+  (concat (take k coll)
+          [v]
+          (drop k coll)))
