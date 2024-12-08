@@ -12,7 +12,7 @@
 
 (def ^:private city (load-city (slurp (resource "day-08.txt"))))
 
-(first city)
+;; (first city)
 
 (defn- antennas [city]
   (let [[M N] (utils/arr-shape city)]
@@ -25,7 +25,7 @@
                   :when (not= c \.)]
               [c [i j]]))))
 
-(antennas city)
+;; (antennas city)
 
 (defn- potential-antinodes [[[a b] [c d]]]
   (let [xs (abs (- a c))
@@ -43,13 +43,31 @@
          vals
          (map #(comb/combinations % 2))
          (mapcat (fn [pairs]
-                (mapcat potential-antinodes pairs)))
+                   (mapcat potential-antinodes pairs)))
          (filter #(get-in city %))
          set
          count)))
 
+(defn- potential-line-antinodes [M [[a b] [c d]]]
+  (let [slope (/ (- d b) (- c a))
+        ;; Zero out
+        y0 (- b (* slope a))]
+    (for [x (range 0 M)
+          :let [y (+ (* slope x) y0)]
+          :when (not (ratio? y))]
+      [x y])))
+
 (defn part-2
   "Day 08 Part 2"
   [input]
-  input)
+  (let [city (load-city input)
+        [M N] (utils/arr-shape city)]
+    (->> (antennas city)
+         vals
+         (map #(comb/combinations % 2))
+         (mapcat (fn [pairs]
+                   (mapcat (partial potential-line-antinodes M) pairs)))
+         (filter #(get-in city %))
+         set
+         count)))
 
