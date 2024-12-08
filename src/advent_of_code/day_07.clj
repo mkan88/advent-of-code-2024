@@ -35,8 +35,14 @@
        (map first)
        (reduce +)))
 
+(defn- || [a b]
+  (parse-long (str a b)))
+
 (defn part-2
   "Day 07 Part 2"
   [input]
-  input)
+  (->> (load-equations input)
+       (filter (fn [[target xs]] (valid? target xs [+ * ||])))
+       (map first)
+       (reduce +)))
 
