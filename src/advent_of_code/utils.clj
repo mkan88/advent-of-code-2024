@@ -21,3 +21,6 @@
   (concat (take k coll)
           [v]
           (drop k coll)))
+
+(defn arr-shape [m]
+  [(count m) (count (first m))])
